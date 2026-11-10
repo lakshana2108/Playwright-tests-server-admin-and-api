@@ -1,0 +1,28 @@
+name: Playwright Test Discovery
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm ci
+    - name: Validate test discovery
+      run: npx playwright test --list
+      env:
+        AE_MASTER_URL: http://localhost:9999/serveradmin/#/login/
+        AE_PILOT_URL: http://localhost:9000
+        AE_ADMIN_USERNAME: test-admin
+        AE_ADMIN_PASSWORD: test-password
+        AE_PILOT_USERNAME: test-pilot
+        AE_PILOT_PASSWORD: test-password
+        AE_EXPECTED_UPLOAD_FOLDER: test-folder
+        AE_SQL_SERVER: test-sql
